@@ -1,0 +1,922 @@
+########################################################################
+### Date Last Updated: 11/18/2020
+### Program Name: National Association of Plant Breeders Intro to R Workshop
+### Date Created: 11/15/2020
+### Author: Steven Anderson (s.anderson1@ufl.edu)
+### Purpose: Tutorial to introduce Basic coding concepts, data structures, 
+###  and data manipulation within the R environment.
+########################################################################
+
+# Welcome to R, this is what is called a comment within the script designated by the hashtag.
+# If you execute these line of code with CTRL+ENTER they will not be processed by the R console.
+
+# Running R code by selecting the line which you would like to execute and press CTRL+ENTER.
+# Copy and pasting the line of code within the console will achieve the same result.
+# You will see in the console what is called prompts (>) which is the code being executed.
+
+# # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # #
+# CODING BASICS ####
+# # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # #
+
+# You can do all forms of arithmetic with R.
+1+2
+#> [1] 3
+
+1 / 100 * 20
+#> [1] 0.2
+
+(29 + 53 + 2) / 7
+#>[1] 12
+
+pi / 2
+#> [1] 1.570796
+
+# R has many arithmetic functions built within.
+# To execute a function you must type the function name, followed by the function
+# arguments withing parenthesis. Using the ? in front of a function name will 
+# prompt the help menu to explain the arguments of the function.
+
+4^(1/2)
+
+?sqrt
+
+sqrt(4)
+
+abs(-5)
+
+# Commas separate function arguments.
+
+log(10, base=10)
+
+log(10, base=2)
+
+pi
+round(pi,digits=2)
+
+# Creating objects using assignment statements (<-)
+a<-5
+
+a
+
+print(a)
+
+Print(a) # Why did we get an error?
+
+# Prompt R to report all object names currently stored in the R environment.
+ls()
+
+
+# or
+objects()
+
+# Deleting objects from the R environment.
+rm(a)
+
+# Clear all objects from the R environment
+rm(list=ls())
+
+
+# Surrounding the assignment statement in parenthesis will prompt the object 
+# assignment and console output of the command line.
+(a<-5)
+
+# Rules about object names.
+# Must start with a letter.
+# Can only contain letters, numbers, underscores (_), or periods (.)
+
+i_use_snake_case                    #This is the preferred method
+OtherPeopleUseCamelCase
+some.people.use.periods
+And_aFew.People_RENOUNCEconvention
+
+
+r_workshop<- "Really Fun!"
+
+r_workshops
+
+R_workshop
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Vectors ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# A Vector is a basic data structure in R.
+# It contains element of the same type.
+# There are six types: logical, integer, double, character, complex, and raw.
+# These six types fall into four major categories:
+?vector
+
+c(-1,0,1)
+class(c(-1,0,1))
+
+c("-1","0","1")
+class(c("-1","0","1"))
+
+c(TRUE, FALSE, TRUE)
+c(T,F,T)
+class(c(T,F,T))
+
+#Logical operators are special characters for binary vectors.
+TRUE == 1
+FALSE == 0
+#This is very important for when we begin learning logical operators and data sub setting.
+as.numeric(c(T,F,T))
+
+as.logical(c(1,0,1))
+
+
+# Vectors are easily created using the combine values function: c().
+?c
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Numeric Vectors 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Numeric vectors can be made up of integers or doubles.
+# In R numbers are doubles by default.
+
+c(-1,0,1)
+#> [1] -1  0  1
+
+class(c(-1,0,1))
+#> [1] "numeric"
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric Vectors "double"
+# - - - - - - - - - - - - - - -
+
+# Doubles are approximations which uses floating point numbers that are not 
+# always precise
+
+# Example 1:
+x<-1.2324243532523
+
+typeof(x)
+#> [1] "double"
+
+x
+#> [1] 1.232424
+
+# Example 2: What is square of the square root of two?
+
+x <- sqrt(2) ^ 2
+
+x - 2
+#> [1] 4.440892e-16
+
+# Doubles have three special characters: NaN, Inf, and -Inf.
+
+v_dbl<-c(-1,0,1)
+
+typeof(v_dbl)
+#> [1] "double"
+
+v_dbl/0 
+#> [1] -Inf  NaN  Inf
+
+# Checking for special characters
+
+is.na(v_dbl/0)
+#> [1] FALSE  TRUE FALSE
+
+is.nan(v_dbl/0)
+#> [1] FALSE  TRUE FALSE
+
+is.finite(v_dbl/0)
+#> [1] FALSE FALSE FALSE
+
+is.infinite(v_dbl/0)
+#> [1]  TRUE FALSE  TRUE
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric Vectors "integer"
+# - - - - - - - - - - - - - - -
+
+# To designate a number as an integer, place an L after the number
+v_int<-c(-1L,0L,1L)
+
+typeof(v_int)
+#> [1] "integer"
+
+#We can convert double to integers:
+typeof(as.integer(v_dbl))
+#> [1] "integer"
+
+# Integers have one special characters: NA.
+v_int/0
+#> [1] -Inf  NaN  Inf 
+# PAUSE!!!! Why isn't the output [1] 0  0  0  
+
+is.integer(v_int/0)
+#> [1] FALSE
+
+typeof(v_int/0)
+#> [1] "double"
+
+typeof(v_int/0L)
+#> [1] "double"
+
+typeof(v_int/1L)
+#> [1] "double"
+
+typeof(v_int*0)
+#> [1] "double"
+
+typeof(v_int*0L)
+#> [1] "integer"
+
+# When creating a vector of multiple types of data, the most complex type always wins
+typeof(c(TRUE, 1L))
+#> [1] "integer"
+typeof(c(1L, 1.5))
+#> [1] "double"
+typeof(c(1.5, "a"))
+#> [1] "character"
+
+
+# Integers have one special characters: NA.
+as.integer(v_int/0)
+#> [1] NA NA NA
+#> Warning message:
+#> NAs introduced by coercion to integer range
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric Vectors of repeated numbers
+# - - - - - - - - - - - - - - -
+?rep
+
+x<-rep(1,20)
+#> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+length(x)
+#> [1] 20
+
+rep(c(1,2,3,4),5)
+#> [1] 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4
+
+rep(c(1:4),5)
+#> [1] 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4
+
+rep_len(c(1,2,3,4),18)
+#> [1] 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 1 2
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric Vectors of numbers number sequence
+# - - - - - - - - - - - - - - -
+
+# The hard way is to do it manually.
+c(1,3,5,7,9,11,13,15)
+#> [1]  1  3  5  7  9 11 13 15
+
+?seq
+
+seq(from=1,to=15,by=2)
+#> [1]  1  3  5  7  9 11 13 15
+
+#Some common functions can be simplified once comfortable with their arguments.
+seq(1,15,2)
+#> [1]  1  3  5  7  9 11 13 15
+          
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric Vectors of random numbers
+# - - - - - - - - - - - - - - -
+?runif
+
+rand<-runif(20,min=-1,max=1)
+
+# Are your numbers different then mine? they should be!
+rand
+
+summary(rand)
+
+# If we use the set.seed function. We will get the same numbers!
+# set.seed only applies to the code executed directly after it.
+set.seed(1) 
+rand<-runif(20,min=-1,max=1)
+rand
+summary(rand)
+
+# Our number will be different again.
+rand<-runif(20,min=-1,max=1)
+
+# We expect the Histogram to be flat and with more samples the greater 
+# spread you will get. 
+runif(10,min=-1,max=1)
+hist(runif(10,min=-1,max=1),breaks=100)
+
+runif(1E6,min=-1,max=1)
+hist(runif(1E6,min=-1,max=1),breaks=100)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+### Numeric vectors of a normal distribution
+# - - - - - - - - - - - - - - -
+
+?rnorm
+
+# Not very normal at low sample size
+rnorm(10,mean=0,sd=1)
+plot(rnorm(10,mean=0,sd=1))
+
+summary(rnorm(10,mean=0,sd=1))
+
+# Lets try n=100... Better
+plot(rnorm(100,mean=0,sd=1))
+
+# Lets try n=500... Nice!
+plot(rnorm(1000,mean=0,sd=1))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# - - - - - - - - - - - - - - -
+# Understanding how R recycles
+# - - - - - - - - - - - - - - -
+set.seed(1)
+x<-sample(10)
+#> [1]  9  4  7  1  2  5  3 10  6  8
+
+x+100
+#> [1] 109 104 107 101 102 105 103 110 106 108
+
+x+c(100,1000)
+#>  109 1004  107 1001  102 1005  103 1010  106 1008
+
+rep(1,10)+1:10
+#> [1]  2  3  4  5  6  7  8  9 10 11
+
+1:10 + 1:3
+# c(1,2,3,4,5,6,7,8,9,10)+c(1,2,3)
+#> [1]  2  4  6  5  7  9  8 10 12 11
+
+# Naming vectors
+c(x = 1, y = 2, z = 4)
+
+names(c(x = 1, y = 2, z = 4))
+
+x<-1:3
+
+names(x)<-c("x","y","z")
+
+x
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Logical Vectors 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Logical Operators
+# <	        less than
+# <=	      less than or equal to
+# >	        greater than
+# >=	      greater than or equal to
+# ==	      exactly equal to
+# !=	      not equal to
+# !x	      Not x
+# x | y	    x OR y
+# x & y	    x AND y
+# isTRUE(x)	test if X is TRUE
+
+?base::Logic
+
+sample_numbers<-runif(100,0,100)
+
+sample_numbers > 50
+
+# Using AND (&) and OR (|) operators 
+sample_numbers > 50 & sample_numbers <= 75
+
+sample_numbers < 50 | sample_numbers >= 75
+
+(sample_numbers >= 0 & sample_numbers <= 25) | (sample_numbers >= 75 & sample_numbers <= 100)
+
+# Equals
+min(sample_numbers)
+
+# Why doesn't this work? Because sample numbers is a double type.
+sample_numbers == 2.778712
+
+sample_numbers == min(sample_numbers)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Vector Sub setting
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Brackets designate sub setting.
+# Try to think of it as making a new vector by pulling values from another vector.
+
+#lets take the first number from the sample numbers we created above.
+sample_numbers[1]
+
+# How about the 50th number
+sample_numbers[50]
+
+# Lets subset the first 10 numbers
+sample_numbers[1:10]
+
+#Lets take the first 10 and last 10
+sample_numbers[c(1:10,91:100)]
+
+#You can also subset and repeat values you subset
+sample_numbers[rep(c(1,50),4)]
+
+# Lets do the classic coin flip simulation
+# Tails (O) and heads (1) at 0.5 probability
+sample(c("H","T"),size=10,replace=T,prob=c(0.5,0.5))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Vector Subsetting with logic operators
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#You can also use logical operators to subset vectors.
+sample_numbers[sample_numbers > 50]
+
+which(sample_numbers > 50)
+
+
+#Lets add another layer
+
+sample_numbers[sample_numbers > 50 & sample_numbers <= 75]
+
+sample_numbers[sample_numbers < 50 | sample_numbers >= 75]
+
+sample_numbers[(sample_numbers >= 0 & sample_numbers <= 25) | (sample_numbers >= 75 & sample_numbers <= 100)]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Vector replacement 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Sub setting can be done for character vectors as well
+
+# Here we will explore some genetic marker calls and fix them to proper Hapmap 
+# double format.
+set.seed(101)
+chr_vector<-sample(c("GG","A","A/G",NA),size=50, replace=T, prob=c(.25,.25,.5,.1))
+
+# Lets add names to the vector
+?paste
+names(chr_vector)<-paste("G",1:50,sep="_")
+
+chr_vector
+
+#Lets summarize this
+table(chr_vector,useNA="always")
+
+#I want to know which individuals have missing missing
+chr_vector[is.na(chr_vector)]
+
+#What if i only want their genotype labels?
+names(chr_vector[is.na(chr_vector)])
+
+#Now I want to pull the first ones data
+chr_vector[is.na(chr_vector)][1]
+#or 
+chr_vector[names(chr_vector)=="G_14"]
+#or
+chr_vector[which(is.na(chr_vector))[1]]
+#The point is to show there are many ways to accomplish the same task.
+#Some are faster than others and learning which methods save computing time
+#Will be important in very large analysis.
+
+# Back to cleaning the vector data.
+#Lets fix the A to AA
+chr_vector[chr_vector=="A"]<-"AA"
+chr_vector
+
+#Lets fix the A/G to AG
+chr_vector[chr_vector=="A/G"]<-"AG"
+
+#Finally will replace NA with gaps (--)
+# You must use helper functions to subset special characters such as NA
+chr_vector[is.na(chr_vector)]<-"--"
+
+#OK lets check out the clean data!
+chr_vector
+
+table(chr_vector,useNA="always")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Fun new Exercise!!!!!
+#We are going round the sample_numbers to their whole number.
+#Then we are going to extract the even numbers Followed by The odds.
+#Finally we will find the prime numbers
+
+round_sample_numbers<-round(sample_numbers,digits=0)
+
+# You can also round up
+ceiling(sample_numbers)
+# or down
+floor(sample_numbers)
+
+# Lets find the even numbers using modulus (%%)
+evens<-round_sample_numbers[(round_sample_numbers%%2)==0]
+
+# Lets find the odd numbers using modulus (%%) and the not operator (!)
+odds<-round_sample_numbers[(round_sample_numbers%%2)!=0]
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Matrix ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#A matrix is a collection of data elements arranged in a two-dimensional rectangular layout.
+#All of the data in a matrix must be the same type (i.e. numeric, logic, or character)
+
+?matrix
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Creating a matrix
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#we will use x to fill the matrix
+x<-seq(from=2,to=100,by=2)
+
+#Must define number of rows and columns, by default matrix are filled by column
+(mat<-matrix(x,nrow=5,ncol=10))
+
+# to fill by rows you must use byrow=T arguement.
+(mat<-matrix(x,nrow=5,ncol=10,byrow=T))
+
+class(mat)
+
+#Matrix also recycle numbers when the data input does not equal the cell number
+# (i.e. rows x columns)
+
+#What happens if we have too few cells?
+matrix(x,nrow=3,ncol=10,byrow=T)
+
+# What happens if we have too many cells?
+matrix(x,nrow=7,ncol=10,byrow=T)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Matrix  subset and modifying 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Matrix have too dimensions the rows(i) and columns (j).
+# Sub setting is similar to vector with he inclusion of the j positions.
+
+#Pull the first row (i=1), seventh column cell (j=7)
+mat[1,7]
+
+# Select rows 1 & 2 and columns 2 & 3
+mat[c(1,2),c(2,3)] 
+
+# Select rows 2 & 3 while keeping all of the columns
+mat[c(2,3),] 
+
+# excluding rows 1 & 2 from the matrix
+mat[-c(1,2),] 
+
+#Matrix can be indexed like a vector but you will get a vector in return
+# this can be confusing if you do not fill your matrix by columns
+mat[1:10]
+
+mat[c(1,3,5)]
+
+#You can use logical vectors to subset matrix
+mat[c(T,T,F,F,F),c(T,T,F,F,F,F,F,F,F,F)]
+
+#if matrix has row and column names
+rownames(mat)<-paste("R",1:5,sep="")
+colnames(mat)<-paste("C",1:10,sep="")
+
+#Subset with matrix dimnames
+mat[,c("C5","C7")]
+
+#transpose a matrix
+t(mat)
+
+#Change matrix dimensions
+dim(mat)<-c(2,25)
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Arrays
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+?array
+
+#Arrays are multidimensional dataset of consistent matrix dimesions within 
+#The dimensions are in order c(# rows,# columns,# dim3,# dim4, etc.)
+(arr<-array(1:24,c(3,4,2)))
+
+arr[,,2]
+
+(arr<-array(1:72,c(3,4,3,2)))
+
+arr[,,2,2]
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Data frames
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Data frames are two dimensional data structures of R.
+# Data frames are a special case of a list which each element has an equal length.
+# MANY DATA INPUT FUNCTIONS READ DATA AS A DATA FRAME.
+
+dta <- data.frame("Genotype" = rep(paste("Maize",1:20,sep=" " ),3), 
+                "Rep" = c(rep(1,20),rep(2,20),rep(3,20)), 
+                "Height" = runif(60,min=1.5,max=3), 
+                stringsAsFactors = FALSE)
+
+#Lets look at some summary values of the data frame we just created.
+nrow(dta)
+
+ncol(dta)
+
+str(dta)
+
+summary(dta)
+
+View(dta)
+
+# We want genotype and Rep to be categorized as factors to be treated as 
+# categorical data
+
+dta$Genotype<-as.factor(dta$Genotype)
+
+dta$Rep<-as.factor(dta$Rep)
+
+#Data frames cane be subset similar to matrix
+#Lets subset only the first rep
+
+dta[1:20,]
+
+#Similar we can subset out using logical vector
+#Lets subset only the first rep
+dta[dta$Rep==1,]
+#Lets subset only Genotype "Maize 5"
+dta[dta$Genotype=="Maize 5",]
+#Lets subset only data with heights less than 2
+dta[dta$Height<=2,]
+
+
+#We can also order Dataframes
+?order
+#Lets order by heights
+dta[order(dta$Height),]
+
+#Now lets try ordering by Genotype
+dta[order(dta$Genotype),]
+
+#Why didn't that work? It is because factors are in a preset order.
+dta$Genotype
+
+#We can manually define factor order
+levels(dta$Genotype)
+dta$Genotype<-factor(dta$Genotype,levels(dta$Genotype)[c(1,12,14,15,16,17,18,19,20,2,3,4,5,6,7,8,9,10,11,13)])
+levels(dta$Genotype)
+
+(dta<-dta[order(dta$Genotype),])
+
+#Lets order by genotype then by height
+dta[order(dta$Genotype,dta$Height),]
+
+
+#DATA CAN BE ADDED TO THE dATA FRAME
+#Lets add a column for flowering time (FLW)
+
+dta<-cbind(dta,"FLW"=runif(60,min=55,max=70))
+
+#Also we can make columns as below:
+dta$Sex<-sample(c("male","female"),60,prob=c(0.5,0.5))
+
+#Rows can also be added
+dta<-rbind(dta,
+           data.frame("Genotype"="Maize 21",
+                      "Rep"=c(1,2,3),
+                      "Height"=runif(3,min=1.5,max=3),
+                      "FLW"=runif(3,min=55,max=70)))
+
+#Also we can make columns as below:
+dta$Sex<-sample(c("male","female"),63,repla=T,prob=c(0.5,0.5))
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Setting the working directory ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getwd()
+
+# Below is how I recommend you write a directory.
+setwd("I://Users//steve//Downloads//Desktop")
+
+# We will lazy load so everyone can pick where they want to save files.
+setwd(choose.dir())
+
+
+getwd()
+
+# Lets save the dta data frame as a csv.
+?write.csv
+
+#This method is preferred!!!!!
+write.csv(dta,
+          "I://Users//steve//Downloads//MaizeTrialExample.csv",
+          row.names=F,
+          quote=F)
+
+# You can also save in this format if you remember the working directory.
+# I do not recommend saving in this way as you will never remember where you
+# you saved files when you come back to old code.
+write.csv(dta,
+          "MaizeTrialExample.csv",
+          row.names=F,
+          quote=F)
+
+rm(dta)
+
+# Now lets reload the data
+?read.csv
+dta<-read.csv("I://Users//steve//Downloads//MaizeTrialExample.csv",
+              header=T,
+              stringsAsFactors = F)
+
+View(dta)
+
+dim(dta)
+
+str(dta)
+
+# What if our data is in .xlsx format and I don't want to go to excel to save as 
+# a csv? We will need to load a package.
+
+#package name must be in quotes.
+install.packages("readxl")
+
+# Although the package is installed. You must load the package within the R 
+# environment to utilize the package functions.
+library("readxl")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Conditional Statements ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### if Statements ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set.seed(101)
+Rand_number<-round(rnorm(1,0,10),0)
+
+# An if statement uses a logical statement in parenthesis to define if the
+# commands within the curly brackets {} should be performed. If false R will not 
+# execute the command.
+
+if(Rand_number<T){
+  print(paste(Rand_number,"is a negative number.", sep=" "))
+  }
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### if...else Statements ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# If statements can be followed by an else statement. In this case you are
+# telling R to execute the else command when the if statement is not true.
+test<-F
+if(Rand_number<T){
+  print(paste(Rand_number,"is a negative number.", sep=" "))
+  }else{
+    print(paste(Rand_number,"is a positive number.", sep=" "))
+    }
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Nested else if ladder Statements ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# We can also nest multiple else statements following an if statement.
+# it is important to remember that R executes functions in order.
+# This means to save computational time the most common true statement should be 
+# the if statement.
+x <- 0
+if (x < 0) {
+  print("Negative number")
+} else if (x > 0) {
+  print("Positive number")
+} else
+  ``
+  print("Zero")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### ifelse() Function ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+seed.set(101)
+(test_nums<-sample(1:100,10,replace=T))
+
+ifelse(test_nums %% 2 == 0,"even","odd")
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### for Loops ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# R iterates through a sequence of vectors () and applies those values in the commands
+# Multiple lines of command code can be executed within the loop statement {}
+for (val in sequence)
+{
+  statement
+}
+
+# Lets write a loop to count the number of even numbers in our test_nums vector
+sum(test_nums %% 2 == 0)
+
+count <- 0
+
+for (val in test_nums) {
+  if(val %% 2 == 0){
+    count<-count+1}
+}
+
+print(count)
+
+
+##### OK lets get a bit more complex
+##### Lets add values to the diagonal of a matrix
+mat<-matrix(0,10,10)
+
+for(i in 1:nrow(mat)){
+  for(j in 1:ncol(mat)){
+    if(i==j){
+      mat[i,j]<-1}
+  }
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### while Loops ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Here, test_expression is evaluated and the body of the loop is entered if the 
+# result is TRUE. The statements inside the loop are executed and the flow returns 
+# to evaluate the test_expression again.This is repeated each time until 
+# test expression evaluates to FALSE
+
+i <- 1
+
+while (i < 20) {
+  print(i)
+  i<-i+1
+}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Break statement ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Break statement is used inside a loop (repeat, for, while) to stop the 
+# iterations and flow the control outside of the loop.
+
+# In a nested looping situation, where there is a loop inside another loop, 
+# this statement exits from the innermost loop that is being evaluated.
+
+x <- 1:10
+for (val in x) {
+  if (val == 7){
+    break
+  }
+  print(val)
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### next statement ####
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# A next statement is used to skip the current iteration of a loop 
+# without ending the loop. R  skips further evaluation of the loop upon the next 
+# statement and starts the next iteration of the loop.
+x <- 1:10
+for (val in x) {
+  if (val == 7){
+    next
+  }
+  print(val)
+}
